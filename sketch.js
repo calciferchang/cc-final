@@ -62,14 +62,24 @@ let shapes = [];
 function setup() {
   createCanvas(640, 360);
   shapes.push(new Draggable(100, 100, 50, 50));
-  shapes.push(new Draggable(150, 100, 50, 50));
+  shapes.push(new Draggable(120, 100, 50, 50));
 }
 
 function draw() {
   background(255);
 
+  let hovered = undefined;
   for (i = 0; i < shapes.length; i++) {
-    shapes[i].over();
+    if (shapes[i].contains()) {
+      hovered = i;
+    }
+  }
+  if (hovered) {
+    shapes[hovered].rollover = true;
+  }
+
+  // render array backwards so lowest index is on top
+  for (i = shapes.length - 1; i >= 0; i--) {
     shapes[i].update();
     shapes[i].show();
   }
