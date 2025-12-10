@@ -23,7 +23,7 @@ class Draggable {
   }
 
   pressed() {
-    if (this.contains(mouseX, mouseY)) {
+    if (this.contains(mouseX, mouseY) && this.rollover) {
       this.dragging = true;
       this.offsetX = this.x - mouseX;
       this.offsetY = this.y - mouseY;
@@ -68,17 +68,19 @@ function setup() {
 function draw() {
   background(255);
 
-  let hovered = undefined;
+  // First, reset all rollover states
   for (i = 0; i < shapes.length; i++) {
-    if (shapes[i].contains()) {
-      hovered = i;
-    }
-  }
-  if (hovered) {
-    shapes[hovered].rollover = true;
+    shapes[i].rollover = false;
   }
 
-  // render array backwards so lowest index is on top
+  // Then find the topmost shape that contains the mouse
+  for (i = 0; i < shapes.length; i++) {
+    if (shapes[i].contains(mouseX, mouseY)) {
+      shapes[i].rollover = true;
+      break; // Only the topmost shape gets hovered
+    }
+  }
+
   for (i = shapes.length - 1; i >= 0; i--) {
     shapes[i].update();
     shapes[i].show();
