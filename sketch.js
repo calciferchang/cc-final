@@ -5,25 +5,12 @@ const { Engine, Body, Bodies, Composite, Vector } = Matter;
 let engine;
 
 let balls = [];
-let thickness = 10;
 
 function setup() {
   createCanvas(400, 400);
   engine = Engine.create();
-  bottomEdge = new Boundary(
-    width / 2,
-    height - thickness / 2,
-    width,
-    thickness,
-  );
-  topEdge = new Boundary(width / 2, thickness / 2, width, thickness);
-  leftEdge = new Boundary(thickness / 2, height / 2, thickness, height);
-  rightEdge = new Boundary(
-    width - thickness / 2,
-    height / 2,
-    thickness,
-    height,
-  );
+
+  cafe = new Cafe(width / 2, height / 2, 200, 200, 4);
 }
 
 function draw() {
@@ -31,11 +18,7 @@ function draw() {
   Engine.update(engine);
   engine.gravity = Vector.create(0, 0);
 
-  bottomEdge.display();
-  leftEdge.display();
-  rightEdge.display();
-  topEdge.display();
-
+  cafe.display();
   for (i = balls.length - 1; i >= 0; i--) {
     balls[i].checkEdges();
     balls[i].display();
@@ -46,7 +29,7 @@ function draw() {
   }
 }
 
-function mouseDragged() {
+function mousePressed() {
   balls.push(new Circle(mouseX, mouseY, random(10, 40)));
 }
 
@@ -56,7 +39,7 @@ class Circle {
     this.done = false;
     this.body = Bodies.circle(x, y, this.r);
 
-    let magnitude = 5;
+    let magnitude = 3;
     let velocity = Vector.create(
       random(-magnitude, magnitude),
       random(-magnitude, magnitude),
@@ -66,6 +49,7 @@ class Circle {
   }
 
   display() {
+    strokeWeight(3);
     ellipse(this.body.position.x, this.body.position.y, this.r * 2, this.r * 2);
   }
 
@@ -83,5 +67,67 @@ class Circle {
   }
   remove() {
     Composite.remove(engine.world, this.body);
+  }
+}
+
+class Cafe {
+  constructor(x, y, w, h, thickness) {
+    this.pos = { x: x, y: y };
+    this.size = { w: w, h: h };
+    this.thickness = thickness;
+    this.margin = { x: (width - w) / 2, y: (height - h) / 2 };
+
+    this.topEdge = Bodies.rectangle(
+      width / 2,
+      this.margin.y / 2,
+      width,
+      this.margin.y,
+      {
+        isStatic: true,
+      },
+    );
+    this.rightEdge = Bodies.rectangle(
+      width - this.margin.x / 2,
+      height / 2,
+      this.margin.x,
+      height,
+      {
+        isStatic: true,
+      },
+    );
+    this.leftEdge = Bodies.rectangle(
+      this.margin.x / 2,
+      height / 2,
+      this.margin.x,
+      height,
+      {
+        isStatic: true,
+      },
+    );
+    this.bottomEdge = Bodies.rectangle(
+      width / 2,
+      height - this.margin.y / 2,
+      width,
+      this.margin.y,
+      {
+        isStatic: true,
+      },
+    );
+    Composite.add(engine.world, [
+      this.topEdge,
+      this.leftEdge,
+      this.bottomEdge,
+      this.rightEdge,
+    ]);
+  }
+  display() {
+    rectMode(CENTER);
+    strokeWeight(this.thickness);
+    rect(
+      this.pos.x,
+      this.pos.y,
+      this.size.w + this.thickness * 2,
+      this.size.h + this.thickness * 2,
+    );
   }
 }
