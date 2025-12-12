@@ -1,100 +1,87 @@
 /// <reference types="p5/global" />
 
-class Draggable {
-  constructor(x, y, w, h) {
-    this.dragging = false;
-    this.rollover = false;
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-    this.offsetX = 0;
-    this.offsetY = 0;
-  }
+const { Engine, Body, Bodies, Composite, Vector } = Matter;
 
-  contains(px, py) {
-    return (
-      px > this.x && px < this.x + this.w && py > this.y && py < this.y + this.h
-    );
-  }
+let engine;
 
-  over() {
-    this.rollover = this.contains(mouseX, mouseY);
-  }
-
-  pressed() {
-    if (this.contains(mouseX, mouseY) && this.rollover) {
-      this.dragging = true;
-      this.offsetX = this.x - mouseX;
-      this.offsetY = this.y - mouseY;
-    }
-  }
-
-  released() {
-    // Quit dragging
-    this.dragging = false;
-  }
-
-  update() {
-    // Adjust location if being dragged
-    if (this.dragging) {
-      this.x = mouseX + this.offsetX;
-      this.y = mouseY + this.offsetY;
-    }
-  }
-
-  show() {
-    stroke(0);
-    // Different fill based on state
-    if (this.dragging) {
-      fill(50);
-    } else if (this.rollover) {
-      fill(100);
-    } else {
-      fill(175, 200);
-    }
-    rect(this.x, this.y, this.w, this.h);
-  }
-}
-
-let shapes = [];
+let balls = [];
+let thickness = 10;
 
 function setup() {
-  createCanvas(640, 360);
-  shapes.push(new Draggable(100, 100, 50, 50));
-  shapes.push(new Draggable(120, 100, 50, 50));
+  createCanvas(400, 400);
+  engine = Engine.create();
+  bottomEdge = new Boundary(
+    width / 2,
+    height - thickness / 2,
+    width,
+    thickness,
+  );
+  topEdge = new Boundary(width / 2, thickness / 2, width, thickness);
+  leftEdge = new Boundary(thickness / 2, height / 2, thickness, height);
+  rightEdge = new Boundary(
+    width - thickness / 2,
+    height / 2,
+    thickness,
+    height,
+  );
 }
 
 function draw() {
-  background(255);
+  background(220);
+  Engine.update(engine);
+  engine.gravity = Vector.create(0, 0);
 
-  // First, reset all rollover states
-  for (i = 0; i < shapes.length; i++) {
-    shapes[i].rollover = false;
-  }
+  bottomEdge.display();
+  leftEdge.display();
+  rightEdge.display();
+  topEdge.display();
 
-  // Then find the topmost shape that contains the mouse
-  for (i = 0; i < shapes.length; i++) {
-    if (shapes[i].contains(mouseX, mouseY)) {
-      shapes[i].rollover = true;
-      break; // Only the topmost shape gets hovered
+  for (i = balls.length - 1; i >= 0; i--) {
+    balls[i].checkEdges();
+    balls[i].display();
+    if (balls[i].done) {
+      balls[i].remove();
+      balls.splice(i, 1);
     }
   }
-
-  for (i = shapes.length - 1; i >= 0; i--) {
-    shapes[i].update();
-    shapes[i].show();
-  }
 }
 
-function mousePressed() {
-  for (i = 0; i < shapes.length; i++) {
-    shapes[i].pressed();
-  }
+function mouseDragged() {
+  balls.push(new Circle(mouseX, mouseY, random(10, 40)));
 }
 
-function mouseReleased() {
-  for (i = 0; i < shapes.length; i++) {
-    shapes[i].released();
+class Circle {
+  constructor(x, y, r) {
+    this.r = r;
+    this.done = false;
+    this.body = Bodies.circle(x, y, this.r);
+
+    let magnitude = 5;
+    let velocity = Vector.create(
+      random(-magnitude, magnitude),
+      random(-magnitude, magnitude),
+    );
+    Body.setVelocity(this.body, velocity);
+    Composite.add(engine.world, this.body);
+  }
+
+  display() {
+    ellipse(this.body.position.x, this.body.position.y, this.r * 2, this.r * 2);
+  }
+
+  checkEdges() {
+    let x = this.body.position.x;
+    let y = this.body.position.y;
+    if (
+      x + this.r < 0 ||
+      x - this.r > width ||
+      y + this.r < 0 ||
+      y - this.r > height
+    ) {
+      this.done = true;
+    }
+  }
+  remove() {
+    Composite.remove(engine.world, this.body);
   }
 }
