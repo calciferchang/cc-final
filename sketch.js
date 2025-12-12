@@ -21,11 +21,13 @@ function draw() {
   cafe.display();
   for (i = balls.length - 1; i >= 0; i--) {
     balls[i].checkEdges();
-    balls[i].display();
     if (balls[i].done) {
       balls[i].remove();
       balls.splice(i, 1);
     }
+  }
+  for (i = 0; i < balls.length; i++) {
+    balls[i].display();
   }
 }
 
