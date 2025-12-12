@@ -11,6 +11,10 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@types/matter-js": "^0.20.2",
     "@types/p5": "^1.7.7"
+  },
+  "dependencies": {
+    "matter-js": "^0.20.0"
   }
 }
