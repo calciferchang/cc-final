@@ -4,6 +4,7 @@ const { Engine, Body, Bodies, Composite, Vector } = Matter;
 let engine;
 
 let balls = [];
+let thickness = 2.5;
 
 function setup() {
   let container = select("#sketch-container");
@@ -13,7 +14,7 @@ function setup() {
   select("canvas").parent("sketch-container");
   engine = Engine.create();
 
-  cafe = new Cafe(width / 2, height / 2, width * 0.7, height * 0.7, 4);
+  cafe = new Cafe(width / 2, height / 2, width * 0.7, height * 0.7, thickness);
 }
 
 function draw() {
@@ -54,7 +55,7 @@ class Circle {
   }
 
   display() {
-    strokeWeight(3);
+    strokeWeight(thickness);
     ellipse(this.body.position.x, this.body.position.y, this.r * 2, this.r * 2);
   }
 
