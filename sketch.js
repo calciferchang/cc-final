@@ -1,5 +1,4 @@
 /// <reference types="p5/global" />
-
 const { Engine, Body, Bodies, Composite, Vector } = Matter;
 
 let engine;
@@ -7,7 +6,11 @@ let engine;
 let balls = [];
 
 function setup() {
-  createCanvas(400, 400);
+  let container = select("#sketch-container");
+  let w = container.width;
+  let h = container.height;
+  createCanvas(w, h);
+  select("canvas").parent("sketch-container");
   engine = Engine.create();
 
   cafe = new Cafe(width / 2, height / 2, 200, 200, 4);
