@@ -4,15 +4,22 @@
   padding: 0;
 }
 body {
-  margin-left: 40vw;
+  display: flex;
+  justify-content: center;
+  gap: 36px;
+  height: 100vh;
+  overflow: hidden;
 }
 main {
   max-width: 26em;
   position: relative;
+  overflow-y: auto;
+  height: 100%;
 }
 #sketch-container {
-  aspect-ratio: 3 / 4;
-  height: 100vh;
+  margin-top: 25vh;
+  aspect-ratio: 1;
+  height: 300px;
 }
 p {
   margin-bottom: 24px;
