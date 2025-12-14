@@ -13,11 +13,11 @@ function setup() {
   select("canvas").parent("sketch-container");
   engine = Engine.create();
 
-  cafe = new Cafe(width / 2, height / 2, 200, 200, 4);
+  cafe = new Cafe(width / 2, height / 2, width * 0.7, height * 0.7, 4);
 }
 
 function draw() {
-  background(220);
+  clear();
   Engine.update(engine);
   engine.gravity = Vector.create(0, 0);
 
