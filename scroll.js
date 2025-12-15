@@ -1,27 +1,19 @@
 let lastScrollTop = 0;
 let scrollThresholds = [];
 let main = document.querySelector("main");
+let currentScrollTop = main.scrollTop;
+
+const SCENES = {}
+let currentScene = "title";
 
 // Handle scroll events
 function handleScroll() {
   if (!main) return;
+  currentScrollTop = main.scrollTop;
 
-  let currentScrollTop = main.scrollTop;
-
-  // Check if any thresholds have been passed
-  for (let i = scrollThresholds.length - 1; i >= 0; i--) {
-    let threshold = scrollThresholds[i];
-    if (
-      currentScrollTop >= threshold.value &&
-      lastScrollTop < threshold.value
-    ) {
-      // Threshold crossed going down
-      createCircleAtScroll();
-      // Remove threshold if it's set to trigger only once
-      if (!threshold.repeatable) {
-        scrollThresholds.splice(i, 1);
-      }
-    }
+  switch (currentScene) {
+    case "title":
+      drawTitleScene();
   }
 
   lastScrollTop = currentScrollTop;
@@ -41,4 +33,36 @@ function createCircleAtScroll() {
   let y = random(height * 0.2, height * 0.8);
   let r = random(10, 40);
   balls.push(new Circle(x, y, r));
+}
+
+function drawTitleScene() {
+  push();
+  fill(0, 0, 0, mapTransparency(currentScrollTop, 0, 200, 0, 255));
+  text("title", width / 2, height / 2);
+  pop();
+}
+
+// Ease in-out sine function
+function easeInOutSine(x) {
+  return -(Math.cos(Math.PI * x) - 1) / 2;
+}
+
+// Map transparency between two points using p5.js map()
+function mapTransparency(
+  position,
+  minPos = 0,
+  maxPos = 200,
+  minAlpha = 0,
+  maxAlpha = 255,
+) {
+  // Normalize position to 0-1 range
+  const normalizedPosition = map(position, minPos, maxPos, 0, 1);
+
+  // Apply easing function
+  const easedValue = easeInOutSine(normalizedPosition);
+
+  // Scale to alpha range
+  const alpha = map(easedValue, 0, 1, maxAlpha, minAlpha);
+
+  return Math.round(alpha);
 }
