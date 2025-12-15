@@ -1,3 +1,7 @@
+:root {
+  --start-margin: 25vh;
+}
+
 * {
   font-size: 1rem;
   margin: 0;
@@ -6,7 +10,7 @@
 body {
   display: flex;
   justify-content: center;
-  gap: 36px;
+  gap: 8px;
   height: 100vh;
   overflow: hidden;
 }
@@ -16,8 +20,21 @@ main {
   overflow-y: auto;
   height: 100%;
 }
+
+main {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  & ::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+  }
+}
+
+p:first-child {
+  margin-top: calc(1.2 * var(--start-margin));
+}
+
 #sketch-container {
-  margin-top: 25vh;
+  margin-top: var(--start-margin);
   aspect-ratio: 1;
   height: 300px;
 }
