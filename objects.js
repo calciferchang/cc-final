@@ -1,5 +1,5 @@
 let balls = [];
-let thickness = 2.5;
+let thickness = 2;
 
 class Circle {
   constructor(x, y, r) {

@@ -30,13 +30,13 @@ main {
 }
 
 p:first-child {
-  margin-top: calc(1.2 * var(--start-margin));
+  margin-top: calc(1.25 * var(--start-margin));
 }
 
 #sketch-container {
   margin-top: var(--start-margin);
   aspect-ratio: 1;
-  height: 300px;
+  height: 400px;
 }
 p {
   margin-bottom: 24px;
