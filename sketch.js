@@ -1,13 +1,6 @@
 /// <reference types="p5/global" />
 const { Engine, Body, Bodies, Composite, Vector } = Matter;
-
 let engine;
-
-let balls = [];
-let thickness = 2.5;
-let lastScrollTop = 0;
-let scrollThresholds = [];
-let main = document.querySelector("main");
 
 function setup() {
   let container = select("#sketch-container");

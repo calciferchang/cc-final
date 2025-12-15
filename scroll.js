@@ -1,3 +1,7 @@
+let lastScrollTop = 0;
+let scrollThresholds = [];
+let main = document.querySelector("main");
+
 // Handle scroll events
 function handleScroll() {
   if (!main) return;
