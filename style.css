@@ -20,7 +20,21 @@ main {
   overflow-y: auto;
   height: 100%;
 }
+ul {
+  list-style-type: none; /* Removes the default bullet points */
+  padding-left: 1em; /* Provides spacing for the custom dash */
+}
 
+ul li::before {
+  content: "– "; /* Inserts an en dash character before each list item */
+  /* You can use a simple hyphen-minus "-" or the &ndash; entity (as a string literal) */
+  display: inline-block;
+  width: 1em; /* Aligns the dash position */
+  margin-left: -1em; /* Pulls the dash to the left of the item text */
+}
+li {
+  margin-bottom: 8px;
+}
 main {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -39,5 +53,31 @@ p:first-child {
   height: 400px;
 }
 p {
-  margin-bottom: 24px;
+  margin-bottom: 48px;
+}
+
+/* Fullscreen image overlay */
+.fullscreen-image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: none;
+  background: white;
+}
+
+.fullscreen-image-overlay.active {
+  display: flex;
+}
+
+.fullscreen-image-overlay img {
+  max-width: 70vw;
+  max-height: 70vh;
+  object-fit: contain;
+  outline: 1px black solid;
 }

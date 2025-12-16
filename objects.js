@@ -4,6 +4,8 @@ let thickness = 2;
 class Circle {
   constructor(x, y, r) {
     this.r = r;
+    this.originalR = r; // Store original radius for lerping
+    this.targetR = r; // Target radius for lerping
     this.done = false;
     this.body = Bodies.circle(x, y, this.r);
 
@@ -14,6 +16,12 @@ class Circle {
     );
     Body.setVelocity(this.body, velocity);
     Composite.add(engine.world, this.body);
+  }
+
+  // Lerp the radius towards a target
+  lerpRadius(target, amount) {
+    this.targetR = target;
+    this.r = lerp(this.r, target, amount);
   }
 
   display() {
@@ -99,7 +107,6 @@ class Cafe {
     );
   }
 }
-
 function youveGotMail() {
   const div = document.createElement("div");
 

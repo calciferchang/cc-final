@@ -12,10 +12,10 @@ function setup() {
 
   cafe = new Cafe(width / 2, height / 2, width * 0.7, height * 0.7, thickness);
 
-  // Set up scroll listener
-  if (main) {
-    main.addEventListener("scroll", handleScroll);
-  }
+  // Add DOM scenes as properties to SCENES object
+  let domScenes = buildScenesFromDOM();
+  Object.assign(SCENES, domScenes);
+
   addScrollThreshold(100);
 }
 
@@ -25,6 +25,8 @@ function draw() {
   engine.gravity = Vector.create(0, 0);
 
   cafe.display();
+  handleScroll();
+
   for (i = balls.length - 1; i >= 0; i--) {
     balls[i].checkEdges();
     if (balls[i].done) {
