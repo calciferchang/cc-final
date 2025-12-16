@@ -3,7 +3,7 @@ let scrollThresholds = [];
 let main = document.querySelector("main");
 let currentScrollTop = main.scrollTop;
 
-const SCENES = {}
+let SCENES = {};
 let currentScene = "title";
 
 // Handle scroll events
@@ -65,4 +65,27 @@ function mapTransparency(
   const alpha = map(easedValue, 0, 1, maxAlpha, minAlpha);
 
   return Math.round(alpha);
+}
+
+// Build scenes object from main children with IDs
+function buildScenesFromDOM() {
+  if (!main) return {};
+
+  let scenes = {};
+  let children = main.children;
+  let mainRect = main.getBoundingClientRect();
+
+  for (let i = 0; i < children.length; i++) {
+    let child = children[i];
+    if (child.id) {
+      let rect = child.getBoundingClientRect();
+      // Calculate position relative to main's scroll container
+      // This accounts for the element's position minus main's top position
+      scenes[child.id] = {
+        top: rect.top - mainRect.top + main.scrollTop,
+      };
+    }
+  }
+
+  return scenes;
 }
